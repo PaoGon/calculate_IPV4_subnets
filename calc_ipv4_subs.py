@@ -1,4 +1,10 @@
 def calc_last_host(broad_addr:list)->list:
+    '''param(broadcast_address: list)
+        
+        calclulate the last host in the subnet
+        
+        returns decimal format of the last host in the subnet: list
+    '''
 
     last_host = broad_addr
 
@@ -8,6 +14,12 @@ def calc_last_host(broad_addr:list)->list:
 
 
 def calc_first_host(net_addr:list)->list:
+    '''param(network_address: list)
+        
+        calclulate the first host in the subnet
+        
+        returns decimal format of the first host in the subnet: list
+    '''
 
     first_host = net_addr
 
@@ -18,11 +30,11 @@ def calc_first_host(net_addr:list)->list:
 
 
 def calc_braodcast_addr(ip_add:list, prefix:int)-> list:
-    '''param(list, int)
+    '''param(ip_address: list, prefix: int)
        
        calcuate the broadcast address
 
-       returns the decimal format of broadcast address
+       returns the decimal format of broadcast address: list
     '''
 
     index = prefix//8
@@ -44,8 +56,11 @@ def calc_braodcast_addr(ip_add:list, prefix:int)-> list:
 
 
 def calc_network_add(ip_add:list, prefix:int)-> list:
-    '''
-        ip_addb is binary form of the ip add
+    '''param(ip_address: list, prefix: int)
+       
+       calcuate the network address
+
+       returns the decimal format of broadcast address: list
     '''
 
     index = prefix//8
@@ -66,26 +81,53 @@ def calc_network_add(ip_add:list, prefix:int)-> list:
     return dec_net_add
 
 
-    
-
-
 def calc_host_per_sub(b_sub:int)->int:
-    #b_sub == num_of_host_b_persub
+    '''param(bits_subnet: int)
+       
+       calcuate the number of host per subnet
+
+       returns the number of host per subnet: int
+    '''
+
     return (2**b_sub)-2
 
 
-def num_of_host_b_persub(new_pref:int)->int:
+def calc_hostb_persub(new_pref:int)->int:
+    '''param(new_prefix: int)
+       
+       calcuate the number of host bits per subnet
+
+       returns the number of host bits per subnet: int
+    '''
     return 32 - new_pref
     
 
 def calc_subnet_created(sub_bits:int):
+    '''param(subnet_bits: int)
+       
+       calcuate the number of subnets created
+
+       returns the number of subnets created: int
+    '''
     return 2**sub_bits
 
 def calc_subnet_bits(n_prefix:int, o_prefix:int)-> int:
+    '''param(new_prefix: int, original_prefix: int)
+       
+       calcuate the number of subnet bits
+
+       returns the number of subnets bits: int
+    '''
     return n_prefix - o_prefix
 
 
 def get_prefix(arr:list)->int:
+    '''param(subnet_mask: list)
+
+        calculate the prefix of the subnet mask or the ip address
+
+        return the prefix of the address given: int
+    '''
     prefix = 0
     for octets in arr:
         for bits in octets:
@@ -97,36 +139,34 @@ def get_prefix(arr:list)->int:
     
  
 def to_binary(arr:list)-> list:
+    '''param(list: list)
+
+        convert list to binary
+
+        return the binary of each octet/index in the list pass: list
+    '''
     diff = 0
     new_arr = []
-    # binary = ""
     for octet in arr:
         res ="{0:b}".format(int(octet))
 
         if len(res) < 8:
             diff = 8-len(res)
             new_arr.append(res + "0"*diff)
-            # binary += (res + "0"*diff)
         else:
             new_arr.append(res)
-            # binary += res
 
-
-    # print(f"binary: {binary}")
     return new_arr
 
 
-    
-
 def main()-> None:
-
-    ip_add = "192.168.200.139"
-    new_sub_musk = "255.255.255.224"
-    orig_sub_musk = "255.255.255.0"
+    ip_add = input("Enter an ip address: ")
+    new_sub_mask = input("Enter the new subnet mask: ")
+    orig_sub_mask = input("Enter the original subnet mask: ")
 
     str_ip = ip_add.split(".")
-    str_orig = orig_sub_musk.split(".")
-    str_new = new_sub_musk.split(".")
+    str_orig = orig_sub_mask.split(".")
+    str_new = new_sub_mask.split(".")
     
 
 
@@ -135,15 +175,15 @@ def main()-> None:
     arr_new = to_binary(str_new)
 
     print(f"binary of IP addr: \t\t{arr_ip_add}")
-    print(f"binary of new submusk: \t\t{arr_new}")
-    print(f"binary of orgi submusk: \t{arr_orig}")
+    print(f"binary of new submask: \t\t{arr_new}")
+    print(f"binary of orgi submask: \t{arr_orig}")
 
     orig_prefix = get_prefix(arr_orig)
     new_prefix = get_prefix(arr_new)
 
     subnet_bits = calc_subnet_bits(new_prefix, orig_prefix)
     created_subs = calc_subnet_created(subnet_bits)
-    bits_per_subs = num_of_host_b_persub(new_prefix)
+    bits_per_subs = calc_hostb_persub(new_prefix)
     host_per_subs = calc_host_per_sub(bits_per_subs)
     
     print("\n")
@@ -158,16 +198,14 @@ def main()-> None:
 
 
     # calculate network address
-
     net_addr = calc_network_add(arr_ip_add, new_prefix)
-    
     broad_addr = calc_braodcast_addr(arr_ip_add, new_prefix)
     print(f"network address: \t\t{net_addr}")
     print(f"broadcast_address: \t\t{broad_addr}")
     
+    # calculate the first and last host in the subnet
     first_host = calc_first_host(net_addr)
     last_host = calc_last_host(broad_addr)
-    
     print(f"Address of First host: \t\t{first_host}")
     print(f"Address of Last host: \t\t{last_host}")
 
