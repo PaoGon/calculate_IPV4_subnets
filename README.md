@@ -5,7 +5,7 @@
 1.Clone the repository
 
 ```bash
-https://github.com/PaoGon/calculate_IPV4_subnets.git
+git clone https://github.com/PaoGon/calculate_IPV4_subnets.git
 ```
 
 2.CD to directory
